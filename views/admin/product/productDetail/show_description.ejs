@@ -1,0 +1,64 @@
+<div class="tab-pane fade show" id="show-description" role="tabpanel" aria-labelledby="profile-tab">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4 mt-2">
+        <div class="card-body">
+            <form action="/description/add" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Title</label>
+                        <input type="text" class="form-control" name="title" placeholder="Enter title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Image</label>
+                        <input type="file" class="form-control" name="image" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Description</label>
+                        <textarea class="form-control" name="about"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Position</label>
+                        <select name="position" class="form-control">
+                            <option value="center">Center</option>
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="hidden" name="productId" value="<%= productId %>">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(let i=0; i < description.length; i++){ %>
+                        <tr>
+                            <td><%= i+1 %></td>
+                            <td><%= description[i].title %></td>
+                            <td>
+                                <form action="/description/<%= description[i].id %>/<%= description[i].imageUrl %>?_method=DELETE" method="POST">
+                                    <a href="javascript::void()" data-id="<%= description[i].id %>" data-imagepath="<%= description[i].imageUrl %>" data-productId="<%= productId %>" data-name="<%= description[i].title %>" data-position="<%= description[i].position %>" data-description="<%= description[i].description %>" class="btn btn-warning btn-sm button-update"><i class="fas fa-edit"></i></a>                                    
+                                    <button type='submit' href="" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% } %>
+                    
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>

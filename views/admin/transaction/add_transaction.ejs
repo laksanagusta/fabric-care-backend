@@ -1,0 +1,167 @@
+<div class="tab-pane fade" id="add-transaction" role="tabpanel2" aria-labelledby="profile-tab">
+    <div class="card shadow mb-4">
+        <div class="card-header">
+            Add Service
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="name">Service</label>
+                <select class="form-control" name="service" id="service" form="carform">
+                    <% for(let i = 0; i < service.length; i++) { %>
+                        <option value="<%= service[i]._id %>" data-unitprice="<%= service[i].unitPrice %>" data-name="<%= service[i].name %>" data-unit="<%= service[i].unit %>"><%= service[i].name %></option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name">Qty</label>
+                <input type="number" class="form-control" name="qty" id="qty" placeholder="Qty" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Subtotal</label>
+                <input type="number" class="form-control" name="subtotal" id="subtotal" placeholder="Subtotal" readonly>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-clear-service">Clear</button>
+                <button type="button" class="btn btn-primary" id="btn-add">Add</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTableAddTransaction" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Qty</th>
+                            <th>Unit</th>
+                            <th>Unit Price</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-4 mt-2">
+        <div class="card-header">
+            Transaction Detail
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label>Customer Name</label>
+                <input type="text" class="form-control" name="customerName" id="customerName" placeholder="Customer Name" required>
+            </div>
+            <div class="form-group">
+                <label>Grand Total</label>
+                <input type="number" class="form-control" name="grandTotal" id="grandTotal" placeholder="Grand Total" required readonly>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-clear-transaction-detail">Clear</button>
+                <button type="button" class="btn btn-success" id="btn-save">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<%- include('../../component/js.ejs') %>
+
+
+    <script>
+        $(document).ready(function () {
+            var tabledata = [];
+
+            $('#qty').keyup(function () {
+                var unitPrice = $('#service option:selected').data('unitprice');
+                var qty = $('#qty').val()
+                var subtotal = qty * unitPrice
+                $('#subtotal').val(subtotal);
+            })
+
+            $('.btn-clear-transaction-detail').click(function () {
+                $('#customerName').val("")
+                $('#grandTotal').val("")
+            })
+
+            $('.btn-clear-service').click(function () {
+                $('#qty').val(0)
+                $('#subtotal').val(0)
+            })
+
+            $('#btn-add').click(function () {
+                var service = $('#service').val()
+                var qty = $('#qty').val()
+                var subtotal = $('#subtotal').val()
+
+                var serviceName = $('#service option:selected').data('name');
+                var unit = $('#service option:selected').data('unit');
+                var unitPrice = $('#service option:selected').data('unitprice');
+
+                tabledata.push({
+                    index: tabledata.length + 1,
+                    id: service,
+                    name: serviceName,
+                    qty: Number(qty),
+                    unit: unit,
+                    unitPrice: Number(unitPrice),
+                    subtotal: Number(subtotal)
+                })
+
+                var grandTotal = accumulateSubtotal(tabledata);
+
+                $('#grandTotal').val(grandTotal)
+
+                var stringTableData = ""
+                stringTableData += '<tr id="row-' + tabledata.length + '"><td>' 
+                    + service + '</td><td>' + serviceName + '</td><td>' 
+                        + qty + '</td><td>' + unit + '</td><td>' + unitPrice + '</td><td>' 
+                            + subtotal + '</td><td><button type="button" class="btn btn-danger delete-item" data-id="' 
+                                + tabledata.length + '">Delete</button></td><tr>';
+
+                $('#dataTableAddTransaction').append(stringTableData)
+            });
+
+            $(document).on('click', '.delete-item', function () {
+                var row_id = $(this).attr('data-id')
+                var indexRemoved = tabledata.findIndex(function(itemTableData) {
+                    return itemTableData.index == row_id
+                });
+                tabledata.splice(indexRemoved, 1)
+                $('#row-' + row_id).remove()
+                
+                var grandTotal = accumulateSubtotal(tabledata);
+
+                $('#grandTotal').val(grandTotal)
+            });
+
+            $('#btn-save').click(function () {
+                var reqBody = {
+                    customerName: $("#customerName").val(),
+                    grandTotal: Number($("#grandTotal").val()),
+                    service: JSON.stringify(tabledata)
+                }
+                
+                $.ajax({
+                    url: "/transaction",
+                    type: "POST",
+                    data: reqBody,
+                    success: function(data){
+                        console.log("success");
+                    },
+                    error: function(xhr, status, error) {
+                        var err = eval("(" + xhr.responseText + ")");
+                        alert(err.message);
+                    }
+                });
+            });
+
+            function accumulateSubtotal(tabledata){
+                var grandTotal = tabledata.reduce((accumulator, item) => {
+                    return accumulator + item.subtotal;
+                }, 0);
+
+                return grandTotal
+            }
+        })
+    </script>
