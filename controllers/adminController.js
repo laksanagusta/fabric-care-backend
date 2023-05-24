@@ -5,6 +5,9 @@ const bycrypt = require("bcryptjs");
 const { serviceService, spendingService, branchService, rackService, transactionService } = require("../services");
 const { transactionHelper } = require("../helper");
 const Flow = require("../models/Flow");
+const Task = require("../models/Task");
+const vars = require("../config/vars");
+const Branch = require("../models/Branch");
 
 
 module.exports = {
@@ -13,7 +16,7 @@ module.exports = {
             const yearlyRevenueData =  await transactionService.getRevenueYearly()
             const years = transactionHelper.generateArrayOfYears()
             res.render('admin/dashboard/v_dashboard', {
-                title: "Antardixa",
+                title: vars.appTitle,
                 user: req.session.user,
                 yearlyRevenueData,
                 years
@@ -24,7 +27,7 @@ module.exports = {
     },
     viewTransaction: async (req, res) => {
         try {
-            const transaction = await Transaction.find();
+            const transaction = await Transaction.find().sort({_id : -1});
             const service = await serviceService.getAllService();
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
@@ -32,14 +35,13 @@ module.exports = {
             res.render('admin/transaction/v_transaction', { 
                 transaction,
                 alert,
-                title: "Antardixa",
+                title: "vars.appTitle",
                 action: "view",
                 service,
                 user: req.session.user
             });
         } catch (error) {
             res.redirect('/admin/transaction');
-            
         }
     },
     viewService: async (req, res) => {
@@ -51,7 +53,7 @@ module.exports = {
             res.render('admin/service/v_service', { 
                 service,
                 alert,
-                title: "Antardixa",
+                title: "vars.appTitle",
                 user: req.session.user
             });
         } catch (error) {
@@ -67,7 +69,7 @@ module.exports = {
             res.render('admin/spending/v_spending', { 
                 spending,
                 alert,
-                title: "Antardixa",
+                title: "vars.appTitle",
                 user: req.session.user
             });
         } catch (error) {
@@ -83,7 +85,7 @@ module.exports = {
             res.render('admin/branch/v_branch', { 
                 branch,
                 alert,
-                title: "Antardixa",
+                title: "vars.appTitle",
                 user: req.session.user
             });
         } catch (error) {
@@ -93,14 +95,13 @@ module.exports = {
     viewRack: async (req, res) => {
         try {
             const rack = await rackService.getAllRack();
-            console.log("sdwadwada");
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status : alertStatus};
             res.render('admin/rack/v_rack', { 
                 rack,
                 alert,
-                title: "Antardixa",
+                title: "vars.appTitle",
                 user: req.session.user
             });
         } catch (error) {
@@ -109,17 +110,20 @@ module.exports = {
     },
     viewUser: async (req, res) => {
         try {
-            const user = await User.findOne({_id:req.session.user.id}) 
+            const userData = await User.find()
+            const branch = await Branch.find()
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status : alertStatus};
             res.render('admin/user/v_user', {
-                title: "Antardixa",
-                user,
+                title: "vars.appTitle",
+                userData : userData,
+                user: req.session.user,
                 alert,
+                branch
             });
         } catch (error) {
-            
+            throw new Error(error.message)
         }
     },
     viewFlow: async (req, res) => {
@@ -129,9 +133,29 @@ module.exports = {
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status : alertStatus};
             res.render('admin/flow/v_flow', {
-                title: "Antardixa",
+                title: "vars.appTitle",
                 flow,
                 alert,
+                user: req.session.user
+            });
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    },
+    viewTask: async (req, res) => {
+        try {
+            const task = await Task.find()
+
+            const flow = await Flow.find()
+
+            const alertMessage = req.flash('alertMessage');
+            const alertStatus = req.flash('alertStatus');
+            const alert = {message: alertMessage, status : alertStatus};
+            res.render('admin/task/v_task', {
+                title: "vars.appTitle",
+                task,
+                alert,
+                flow,
                 user: req.session.user
             });
         } catch (error) {
@@ -147,7 +171,7 @@ module.exports = {
                 const alert = {message: alertMessage, status : alertStatus};
                 res.render('index', {
                     alert,
-                    title: "Antardixa",
+                    title: "vars.appTitle",
                     user: req.session.user
                 });
             }else{
@@ -165,7 +189,7 @@ module.exports = {
             const alert = {message: alertMessage, status : alertStatus};
             res.render('signup', {
                 alert,
-                title: "Antardixa",
+                title: "vars.appTitle",
                 user: req.session.user
             });
         } catch (error) {

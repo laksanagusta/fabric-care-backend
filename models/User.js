@@ -18,10 +18,14 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
+        required: false
+    },
+    role: {
+        type: String,
         required: true
     },
-    image: {
-        type: String,
+    branch : {
+        type: Schema.Types.Mixed,
         required: false
     }
 });

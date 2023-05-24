@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const transactionSchema = new Schema({
-  _id: {
+  id: {
     type: String,
     required: true,
   },
-  grandTotal: {
-    type: Number,
+  status: {
+    type: String,
     required: true
   }
 });

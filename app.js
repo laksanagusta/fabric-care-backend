@@ -14,7 +14,7 @@ const cors = require('cors');
 var request = require("request");
 const {authenticateJWT} = require('./middlewares/auth');
 var dotenv = require('dotenv')
-const { vars, mongoose } = require('./config');
+const { mongoose } = require('./config');
 
 //put, delete lib
 const methodOverride = require('method-override');
@@ -47,6 +47,7 @@ const flowRouter = require('./routes/flow');
 //api
 const apiAuthRouter = require('./routes/api/auth')
 const apiTaskRouter = require('./routes/api/task')
+const apiTransactionRouter = require('./routes/api/transaction')
 
 
 // adding Helmet to enhance your API's security
@@ -85,7 +86,7 @@ app.listen(port, () => {
 });
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 
 //admin
 app.use('/admin', adminRouter);
@@ -99,6 +100,7 @@ app.use('/flow', flowRouter);
 //api
 app.use('/api/v1/auth', apiAuthRouter)
 app.use('/api/v1/task', apiTaskRouter)
+app.use('/api/v1/transaction', apiTransactionRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

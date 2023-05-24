@@ -13,11 +13,15 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control name" name="name" value="<%= rack.name %>" placeholder="Name">
+                    <input type="text" class="form-control name" name="name" placeholder="Name">
                 </div>
                 <div class="form-group">
                     <label for="code">Code</label>
-                    <input type="text" class="form-control name" name="code" value="<%= rack.code %>" placeholder="Code" required>
+                    <input type="text" class="form-control code" name="code" placeholder="Code" required>
+                </div>
+                <div class="form-group">
+                    <label for="capacity">Capacity</label>
+                    <input type="number" class="form-control capacity" id="capacity" name="capacity" placeholder="Enter Capacity" required>
                 </div>
             </div>
             <div class="modal-footer">

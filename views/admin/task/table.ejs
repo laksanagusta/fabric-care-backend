@@ -12,30 +12,37 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Code</th>
-                        <th>Name</th>
+                        <th>Flow</th>
+                        <th>Note</th>
+                        <th>Worker</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% for (let i=0; i < flow.length; i++) { %>
+                    <% for (let i=0; i < task.length; i++) { %>
                         <tr>
                             <td>
                                 <%= i+1 %>
                             </td>
                             <td>
-                                <%= flow[i].code %>
+                                <%= task[i].taskFlow %>
                             </td>
                             <td>
-                                <%= flow[i].name %>
+                                <%= task[i].taskNote %>
                             </td>
                             <td>
-                                <form action="/flow/<%= flow[i].id %>?_method=DELETE" method="POST">
-                                    <a data-id="<%= flow[i]._id %>" data-code="<%= flow[i].code %>"
-                                        data-name="<%= flow[i].name %>"
+                                <%= task[i].taskWorker %>
+                            </td>
+                            <td>
+                                <%= task[i].taskStatus %>
+                            </td>
+                            <td>
+                                <form action="/task/<%= task[i].id %>?_method=DELETE" method="POST">
+                                    <a data-id="<%= task[i].id %>" data-code="<%= task[i].code %>"
+                                        data-="<%= task[i].name %>" data-taskflow="<%= task[i].taskflow %>" data-tasknote="<%= task[i].tasknote %>" data-worker="<%= task[i].taskworker %>" data-worker="<%= task[i].user.name %>"
                                         class="btn btn-warning btn-sm button-update"><i class="fas fa-edit"></i></a>
-                                    <button type='submit' href="" class="btn btn-danger btn-sm"><i
-                                            class="fas fa-trash"></i></button>
+                                    <button type='submit' href="" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>

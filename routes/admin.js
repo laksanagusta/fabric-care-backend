@@ -16,5 +16,6 @@ router.get('/spending', adminController.viewSpending);
 router.get('/branch', adminController.viewBranch);
 router.get('/rack', adminController.viewRack);
 router.get('/flow', adminController.viewFlow);
+router.get('/task', adminController.viewTask);
 
 module.exports = router;

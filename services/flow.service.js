@@ -11,17 +11,14 @@ const createFlow = async (req) => {
     name,
     code
   };
-
-  console.log(newFlow)
   await Flow.create(newFlow);
 };
 
 const updateFlow = async (req) => {
-  const { name, code } = req.body;
+  const { name, code, id } = req.body;
   const flow = await Flow.findOne({ _id: id });
   flow.name = name;
-  flow.code = code;
-  flow.capacity = capacity;
+  flow.code = code.toLowerCase();
   await flow.save();
 };
 

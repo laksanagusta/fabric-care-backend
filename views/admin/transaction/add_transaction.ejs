@@ -147,7 +147,7 @@
                     type: "POST",
                     data: reqBody,
                     success: function(data){
-                        console.log("success");
+                        location.reload();
                     },
                     error: function(xhr, status, error) {
                         var err = eval("(" + xhr.responseText + ")");

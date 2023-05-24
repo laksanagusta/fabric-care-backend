@@ -73,27 +73,29 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <form action="/transaction?_method=PUT" method="POST">
+                                        <% if(transaction.status !== "done") { %>
+                                            <form action="/transaction?_method=PUT" method="POST">
 
-                                            <div class="form-group">
-                                                <label for="rack">Pilih Rack</label>
-                                                <select class="form-control" name="rackId">
-                                                    <% for(let i=0; i < rack.length; i++) { %>
-                                                        <option value="<%= rack[i]._id %>">
-                                                            <%= rack[i].code %>
-                                                        </option>
-                                                        <% } %>
-                                                </select>
-                                            </div>
+                                                <div class="form-group">
+                                                    <label for="rack">Pilih Rack</label>
+                                                    <select class="form-control" name="rackId">
+                                                        <% for(let i=0; i < rack.length; i++) { %>
+                                                            <option value="<%= rack[i]._id %>">
+                                                                <%= rack[i].code %>
+                                                            </option>
+                                                            <% } %>
+                                                    </select>
+                                                </div>
 
-                                            <div class="modal-footer">
-                                                <input type="hidden" class="id" name="id" value="<%= transactionId %>">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save</button>
-                                            </div>
+                                                <div class="modal-footer">
+                                                    <input type="hidden" class="id" name="id" value="<%= transactionId %>">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                </div>
 
-                                        </form>
+                                            </form>
+                                        <% } %>
                                     </div>
                                 </div>
 
@@ -188,6 +190,6 @@
     <%- include('../../component/js.ejs') %>
     <%- include('add_transaction_history.ejs') %>
 
-        <script>
-            $("#barcode").JsBarcode("<%= transaction.id %>");
-        </script>
+    <script>
+        $("#barcode").JsBarcode("<%= transaction.id %>");
+    </script>

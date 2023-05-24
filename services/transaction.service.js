@@ -30,6 +30,18 @@ const findById = async (id) => {
   return transaction;
 };
 
+const findByBranchId = async (locationId) => {
+  if(!locationId){
+    throw new Error(`Please send the location id`)
+  }
+
+  const transaction = await Transaction.find({
+    locationId : locationId
+  })
+
+  return transaction
+}
+
 const addTransactionHistory = async (req) => {
   const { id, status, note } = req.body;
 
@@ -44,14 +56,26 @@ const addTransactionHistory = async (req) => {
 };
 
 const updateTransaction = async (req) => {
-  const { id, rackId } = req.body;
+  const { id, rackId, transactionHistory, status } = req.body;
   const transaction = await Transaction.findOne({ _id: id });
-  const rackAssigned = await Rack.findOne({ _id: rackId });
-  transaction.status = "done";
-  if(transaction.status = "done") transaction.transactionFinishTime = formatDate(new Date())
-  transaction.rack = rackAssigned;
 
-  await transaction.save();
+  if(rackId){
+    const rackAssigned = await Rack.findOne({ _id: rackId });
+    transaction.rack = rackAssigned;
+  }
+
+  if(transactionHistory){
+    transaction.transactionHistory.push(transactionHistory)
+  }
+
+  if(status){
+    if(status == "done") {
+      transaction.transactionFinishTime = formatDate(new Date())
+    }
+    transaction.status = status
+  }
+
+  transaction.save();
 };
 
 const getRevenueYearly = async (year) => {  
@@ -132,5 +156,6 @@ module.exports = {
   addTransactionHistory,
   updateTransaction,
   getRevenueYearly,
-  getReportPerService
+  getReportPerService,
+  findByBranchId
 };
