@@ -4,7 +4,9 @@ const { spendingService } = require('../services')
 module.exports = {
     addSpending: async (req, res) => {
         try {
-            await spendingService.createSpending(req);
+            req.body.branchId = req.session.user.branchs[0].id
+            req.body.user = req.session.user
+            await spendingService.createSpending(req.body);
             req.flash('alertMessage', 'Success Add Spending')
             req.flash('alertStatus', 'success')
             res.redirect('/admin/spending');

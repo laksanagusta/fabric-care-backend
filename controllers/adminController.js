@@ -35,7 +35,7 @@ module.exports = {
             res.render('admin/transaction/v_transaction', { 
                 transaction,
                 alert,
-                title: "vars.appTitle",
+                title: vars.appTitle,
                 action: "view",
                 service,
                 user: req.session.user
@@ -53,7 +53,7 @@ module.exports = {
             res.render('admin/service/v_service', { 
                 service,
                 alert,
-                title: "vars.appTitle",
+                title: vars.appTitle,
                 user: req.session.user
             });
         } catch (error) {
@@ -62,14 +62,15 @@ module.exports = {
     },
     viewSpending: async (req, res) => {
         try {
-            const spending = await spendingService.getAllSpending();
+            const branchIds = req.session.user.branchs.map(value => value.id)
+            const spending = await spendingService.getAllSpending(branchIds);
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status : alertStatus};
             res.render('admin/spending/v_spending', { 
                 spending,
                 alert,
-                title: "vars.appTitle",
+                title: vars.appTitle,
                 user: req.session.user
             });
         } catch (error) {
@@ -85,7 +86,7 @@ module.exports = {
             res.render('admin/branch/v_branch', { 
                 branch,
                 alert,
-                title: "vars.appTitle",
+                title: vars.appTitle,
                 user: req.session.user
             });
         } catch (error) {
@@ -101,7 +102,7 @@ module.exports = {
             res.render('admin/rack/v_rack', { 
                 rack,
                 alert,
-                title: "vars.appTitle",
+                title: vars.appTitle,
                 user: req.session.user
             });
         } catch (error) {
@@ -116,7 +117,7 @@ module.exports = {
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status : alertStatus};
             res.render('admin/user/v_user', {
-                title: "vars.appTitle",
+                title: vars.appTitle,
                 userData : userData,
                 user: req.session.user,
                 alert,
@@ -133,7 +134,7 @@ module.exports = {
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status : alertStatus};
             res.render('admin/flow/v_flow', {
-                title: "vars.appTitle",
+                title: vars.appTitle,
                 flow,
                 alert,
                 user: req.session.user
@@ -152,7 +153,7 @@ module.exports = {
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alertMessage, status : alertStatus};
             res.render('admin/task/v_task', {
-                title: "vars.appTitle",
+                title: vars.appTitle,
                 task,
                 alert,
                 flow,
@@ -171,7 +172,7 @@ module.exports = {
                 const alert = {message: alertMessage, status : alertStatus};
                 res.render('index', {
                     alert,
-                    title: "vars.appTitle",
+                    title: vars.appTitle,
                     user: req.session.user
                 });
             }else{
@@ -189,7 +190,7 @@ module.exports = {
             const alert = {message: alertMessage, status : alertStatus};
             res.render('signup', {
                 alert,
-                title: "vars.appTitle",
+                title: vars.appTitle,
                 user: req.session.user
             });
         } catch (error) {
@@ -208,7 +209,8 @@ module.exports = {
                     req.session.user = {
                         id:user.id,
                         name:user.name,
-                        username:user.username
+                        username:user.username,
+                        branchs:user.branch
                     }
                     res.redirect('/admin/dashboard');
                 }

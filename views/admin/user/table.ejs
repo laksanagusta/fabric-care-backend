@@ -26,10 +26,14 @@
                         <td><%= userData[i].name %></td>
                         <td><%= userData[i].username %></td>
                         <td><%= userData[i].role %></td>
-                        <td><%= userData[i].branch.name %></td>
+                        <td>
+                            <% for (let x = 0; x < userData[i].branch.length; x++) { %>
+                                <span class="badge badge-light text-body"><%= userData[i].branch[x].name %></span>
+                            <% } %>
+                        </td>
                         <td>
                             <form action="/user/<%= userData[i].id %>?_method=DELETE" method="POST">
-                                <a data-id="<%= userData[i].id %>" data-name="<%= userData[i].name %>" data-username="<%= userData[i].username %>" data-password="<%= userData[i].password %>" class="btn btn-warning btn-sm button-update"><i class="fas fa-edit"></i></a>
+                                <a data-id="<%= userData[i].id %>" data-branch="<%= userData[i].branch[0].id %>" data-name="<%= userData[i].name %>" data-username="<%= userData[i].username %>" data-password="<%= userData[i].password %>" class="btn btn-warning btn-sm button-update"><i class="fas fa-edit"></i></a>
                                 <button type='submit' href="" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>

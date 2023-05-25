@@ -6,13 +6,15 @@ const Transaction = require("../models/Transaction");
 const { transactionRepository } = require("../repositories");
 
 const createTransaction = async (req) => {
-  const { customerName, grandTotal, service } = req.body;
+  const { customerName, grandTotal, service, branchId, user } = req.body;
   const newTransaction = {
     customerName,
     grandTotal,
     service: JSON.parse(service),
     status: "inbound",
     created_at: transactionHelper.formatDate(new Date()),
+    branchId: branchId,
+    user: user,
     transactionHistory: [
       {
         note: "Pesanan berhasil dibuat",

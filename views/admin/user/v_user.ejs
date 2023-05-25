@@ -67,9 +67,11 @@
         let id = $(this).data('id');
         let username = $(this).data('username');
         let name = $(this).data('name');
+        let branch = $(this).data('branch');
         $('#edit-modal').modal('show');
         $('.name').val(name);
         $('.id').val(id);
         $('.username').val(username);
+        $('.branchId option[value="'+branch+'"]').prop('selected', true)
     })
 </script>

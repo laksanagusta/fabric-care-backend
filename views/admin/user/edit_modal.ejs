@@ -21,7 +21,7 @@
                 </div>
                 <div class="form-group">
                     <label for="branch">Pilih Branch</label>
-                    <select class="form-control" name="branchId">
+                    <select class="form-control branchId" name="branchId">
                         <% for(let i=0; i < branch.length; i++) { %>
                             <option value="<%= branch[i]._id %>">
                                 <%= branch[i].name %>

@@ -78,6 +78,10 @@ const transactionSchema = new Schema({
     type: String,
     required: false
   },
+  branchId : {
+    type: String,
+    required: true
+  },
   transactionHistory: [transactionHistorySchema],
   service: [transactionService],
 },{

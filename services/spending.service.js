@@ -1,25 +1,30 @@
 const { userHelper } = require("../helper");
 const Spending = require("../models/Spending");
 
-const getAllSpending = async () => {
-  const services = await Spending.find();
+const getAllSpending = async (branchs) => {
+  const services = await Spending.find({
+    "branchId" : {
+      "$in" : branchs
+    }
+  });
   return services;
 };
 
 const createSpending = async (req) => {
-  const { description, grandTotal } = req.body;
+  const { description, grandTotal, branchId, user } = req;
 
   const newSpending = {
     description,
     grandTotal,
-    user : userHelper.getCurrentUserData(req),
+    user : user,
+    branchId : branchId
   };
 
   await Spending.create(newSpending);
 };
 
 const updateSpending = async (req) => {
-  const { description, grandTotal, id } = req.body;
+  const { description, grandTotal, id } = req;
   const spending = await Spending.findOne({ _id: id });
   spending.description = description;
   spending.grandTotal = grandTotal;

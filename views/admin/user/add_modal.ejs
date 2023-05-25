@@ -9,7 +9,7 @@
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form action="/user" method="POST" enctype="multipart/form-data">
+        <form action="/user" method="POST">
             <div class="modal-body">
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -26,7 +26,7 @@
                             <option value="<%= branch[i]._id %>">
                                 <%= branch[i].name %>
                             </option>
-                            <% } %>
+                        <% } %>
                     </select>
                 </div>
                 <div class="form-group">

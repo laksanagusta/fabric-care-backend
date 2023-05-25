@@ -6,6 +6,8 @@ const { transactionService, rackService } = require('../services');
 module.exports = {
     addTransaction: async (req, res) => {
         try {
+            req.body.branchId = req.session.user.branchs[0].id
+            req.body.user = req.session.user
             const transaction = await transactionService.createTransaction(req);
             res.status(200).json({
                 message : "Success save transaction",

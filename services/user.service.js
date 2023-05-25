@@ -3,12 +3,19 @@ const User = require("../models/User")
 
 module.exports = {
     create: async (user) => {
-        const {name, username, password} = user
+        const {name, username, password, branchId} = user
+
+        const branch = await Branch.findOne({_id: branchId})
+
         const newUser = await User.create({
             name: name,
             username: username,
             password: password,
-            role: "WORKER"
+            role: "WORKER",
+            branch: [{
+                id : branch._id,
+                name : branch.name
+            }]
         })
         newUser.save()
     },
@@ -20,15 +27,14 @@ module.exports = {
         const branch = await Branch.findOne({_id: branchId})
 
         if(userData){
-            console.log("found")
             userData.name = name,
             userData.username = username,
             userData.password = password
             userData.role = role ?? "WORKER"
-            userData.branch = {
+            userData.branch = [{
                 id : branch._id,
                 name : branch.name
-            }
+            }]
             userData.save()
         }
     }

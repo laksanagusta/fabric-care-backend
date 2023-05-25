@@ -3,6 +3,17 @@ const { Schema } = mongoose;
 const { ObjectId } = mongoose.Schema;
 const bycrypt = require("bcryptjs");
 
+const branchSchema = new Schema({
+    id: {
+        type : String,
+        required : true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+})
+
 const userSchema = new Schema({
     name: {
         type : String,
@@ -24,10 +35,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    branch : {
-        type: Schema.Types.Mixed,
-        required: false
-    }
+    branch : [branchSchema]
 });
 
 userSchema.pre('save', async function(next) {

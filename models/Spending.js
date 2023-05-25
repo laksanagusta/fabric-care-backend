@@ -15,6 +15,10 @@ const spendingSchema = new Schema(
         type: Schema.Types.Mixed,
         required: true
     },
+    branchId : {
+      type: String,
+      required: true
+    }
   },
   {
     timestamps: true,
