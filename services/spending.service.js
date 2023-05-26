@@ -2,12 +2,13 @@ const { userHelper } = require("../helper");
 const Spending = require("../models/Spending");
 
 const getAllSpending = async (branchs) => {
-  const services = await Spending.find({
+  const spendings = await Spending.find({
     "branchId" : {
       "$in" : branchs
     }
   });
-  return services;
+
+  return spendings;
 };
 
 const createSpending = async (req) => {

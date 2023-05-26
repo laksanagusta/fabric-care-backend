@@ -43,11 +43,13 @@ const spendingRouter = require('./routes/spending');
 const branchRouter = require('./routes/branch');
 const rackRouter = require('./routes/rack');
 const flowRouter = require('./routes/flow');
+const taskRouter = require('./routes/task');
 
 //api
 const apiAuthRouter = require('./routes/api/auth')
 const apiTaskRouter = require('./routes/api/task')
 const apiTransactionRouter = require('./routes/api/transaction')
+const apiDashboardRouter = require('./routes/api/dashboard')
 
 
 // adding Helmet to enhance your API's security
@@ -96,11 +98,14 @@ app.use('/spending', spendingRouter);
 app.use('/branch', branchRouter);
 app.use('/rack', rackRouter);
 app.use('/flow', flowRouter);
+app.use('/task', taskRouter);
 
 //api
 app.use('/api/v1/auth', apiAuthRouter)
 app.use('/api/v1/task', apiTaskRouter)
 app.use('/api/v1/transaction', apiTransactionRouter)
+app.use('/api/v1/dashboard', apiDashboardRouter)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

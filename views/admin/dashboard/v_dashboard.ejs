@@ -14,11 +14,91 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Filter</h6>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <select class="form-control" name="branchId" id="branchId">
+                          <% for(let i = 0; i < branchs.length; i++) { %>
+                            <option value="<%= branchs[i].id %>"><%= branchs[i].name %></option>
+                          <% } %>
+                        </select>
+                      </div>
+                      <button type="button" class="btn btn-success" id="btn-filter-location">Filter</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div class="row">
+                <div class="col-lg-6 col-xl-3 mb-4">
+                  <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Transaksi belum selesai harian</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800 ongoing-transaction"></div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-calendar fa-2x text-gray-300" data-feather="calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-xl-3 mb-4">
+                  <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Pendapatan harian</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800 daily-earnings"></div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-calendar fa-2x text-gray-300" data-feather="calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-xl-3 mb-4">
+                  <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Transaksi selesai harian</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800 transaction-finished"></div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-calendar fa-2x text-gray-300" data-feather="calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-xl-3 mb-4">
+                  <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Transaksi dibuat harian</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800 transaction-created"></div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-calendar fa-2x text-gray-300" data-feather="calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
+              <div class="row">
                 <div class="col-xl-8 col-lg-7">
-
                   <!-- Area Chart -->
                   <div class="card shadow mb-4">
                     <div class="card-header py-3">
@@ -38,9 +118,7 @@
                           </div>
                         </div>
                         <div>
-                          <div>
-                            <button type="button" class="btn btn-success" id="btn-filter-revenue">Filter</button>
-                          </div>
+                          <button type="button" class="btn btn-success" id="btn-filter-revenue">Filter</button>
                         </div>
                       </div>
                       <div class="chart-area">
@@ -54,7 +132,7 @@
                   <div class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3">
-                      <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+                      <h6 class="m-0 font-weight-bold text-primary">Total Berat per Service</h6>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
@@ -62,17 +140,12 @@
                         <canvas id="donutReportPerServiceCurrentDate"></canvas>
                       </div>
                       <hr>
-                      Styling for the donut chart can be found in the
-                      <code>/js/demo/chart-pie-demo.js</code> file.
                     </div>
                   </div>
                 </div>
               </div>
-
-
             </div>
             <!-- /.container-fluid -->
-
         </div>
         <!-- End of Main Content -->
 
@@ -95,6 +168,7 @@
     <script>
       $(document).ready(function () {
         $("#btn-filter-revenue").click()
+        $("#btn-filter-location").click()
 
         $.ajax({
           url: "/transaction/report-per-service-current-date",
@@ -142,6 +216,26 @@
           }
         });
       });
+
+      $("#btn-filter-location").click(function () {
+        $.ajax({
+          url: "/api/v1/dashboard",
+          type: "POST",
+          data: {
+            branchId : $('#branchId').val()
+          },
+          success: function (data) {
+            $(".ongoing-transaction").text(data.dashboardData.transactionOngoing)
+            $(".daily-earnings").text(data.dashboardData.earnings)
+            $(".transaction-created").text(data.dashboardData.transactionCreatedToday)
+            $(".transaction-finished").text(data.dashboardData.transactionFinishedToday)
+          },
+          error: function (xhr, status, error) {
+            var err = eval("(" + xhr.responseText + ")");
+            alert(err.message);
+          }
+        });
+      })
 
       $("#btn-filter-revenue").click(function () {
         var reqBody = {

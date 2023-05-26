@@ -21,7 +21,8 @@ module.exports = {
     },
     editTransaction: async (req, res) => {
         try {
-            await transactionService.updateTransaction(req);
+            req.body.user = req.session.user
+            transactionService.updateTransaction(req);
             req.flash('alertMessage', 'Success Update Transaction')
             req.flash('alertStatus', 'success')
             res.redirect('/admin/transaction');            

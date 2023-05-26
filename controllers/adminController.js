@@ -1,9 +1,8 @@
-const Transaction = require("../models/Transaction");
 const User = require("../models/User");
 const Service = require("../models/Service");
 const bycrypt = require("bcryptjs");
 const { serviceService, spendingService, branchService, rackService, transactionService } = require("../services");
-const { transactionHelper } = require("../helper");
+const { transactionHelper, globalHelper } = require("../helper");
 const Flow = require("../models/Flow");
 const Task = require("../models/Task");
 const vars = require("../config/vars");
@@ -15,19 +14,25 @@ module.exports = {
         try {
             const yearlyRevenueData =  await transactionService.getRevenueYearly()
             const years = transactionHelper.generateArrayOfYears()
+
+            const date = new Date()
+            const formatDate = await globalHelper.formatDateTimeRange(date, date)
+
             res.render('admin/dashboard/v_dashboard', {
+                branchs: req.session.user.branchs,
                 title: vars.appTitle,
                 user: req.session.user,
                 yearlyRevenueData,
                 years
             });            
         } catch (error) {
-            
+            console.log(error)
         }
     },
     viewTransaction: async (req, res) => {
         try {
-            const transaction = await Transaction.find().sort({_id : -1});
+            const branchIds = await globalHelper.mappingIds(req.session.user.branchs);
+            const transaction = await transactionService.findByBranchId(branchIds);
             const service = await serviceService.getAllService();
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
@@ -62,7 +67,7 @@ module.exports = {
     },
     viewSpending: async (req, res) => {
         try {
-            const branchIds = req.session.user.branchs.map(value => value.id)
+            const branchIds = await globalHelper.mappingIds(req.session.user.branchs);
             const spending = await spendingService.getAllSpending(branchIds);
             const alertMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
@@ -210,7 +215,8 @@ module.exports = {
                         id:user.id,
                         name:user.name,
                         username:user.username,
-                        branchs:user.branch
+                        branchs:user.branch,
+                        role:user.role
                     }
                     res.redirect('/admin/dashboard');
                 }

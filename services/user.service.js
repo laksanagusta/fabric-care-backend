@@ -7,9 +7,13 @@ module.exports = {
 
         const branch = await Branch.findOne({_id: branchId})
 
+        if(username.includes(" ")){
+            throw Error("Invalud username value")
+        }
+
         const newUser = await User.create({
             name: name,
-            username: username,
+            username: username.toLowerCase(),
             password: password,
             role: "WORKER",
             branch: [{

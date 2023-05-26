@@ -7,7 +7,7 @@ const getAllTask = async () => {
 };
 
 const createTask = async (req) => {
-  const { taskFlow, taskStatus, taskNote, transaction, user } = req.body;
+  const { taskFlow, taskStatus, taskNote, transaction, user } = req;
 
   const parseTransaction = JSON.parse(transaction)
   
